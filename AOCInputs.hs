@@ -4,12 +4,13 @@ module AOCInputs where
 
 import System.IO
 
-readLines :: FilePath -> IO [String]
-readIntegerList :: FilePath -> IO [Integer]
-
 splitLine :: (String -> (Bool, String)) -> String -> [String]
 atString :: String -> String -> (Bool, String)
 atSpace :: String -> (Bool, String)
+
+readLines :: FilePath -> IO [String]
+readIntegerListFromSingleLineFile :: (String -> (Bool, String)) -> FilePath -> IO [Integer]
+readIntegerListFromMultiLineFile :: FilePath -> IO [Integer]
 
 readLines file =
   do fh <- openFile file ReadMode
@@ -17,7 +18,11 @@ readLines file =
      hClose fh
      return res
 
-readIntegerList file =
+readIntegerListFromSingleLineFile sepFun file =
+  do line <- readLines file
+     return $ map (\x -> read x::Integer) (splitLine sepFun $ head line)
+
+readIntegerListFromMultiLineFile file =
   do l <- readLines file
      return $ map (\x -> read x::Integer) l
 
