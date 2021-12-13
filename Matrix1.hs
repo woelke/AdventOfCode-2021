@@ -6,15 +6,15 @@ import AOCInputs
 
 readSingleDigitMatrix :: [String] -> [[Integer]]
 
-width :: [[Integer]] -> Int
-height :: [[Integer]] -> Int
-value :: Int -> Int -> [[Integer]] -> Integer
-validCord :: Int -> Int -> [[Integer]] -> Bool
+width :: [[a]] -> Int
+height :: [[a]] -> Int
+value :: Int -> Int -> [[a]] -> a
+validCord :: Int -> Int -> [[a]] -> Bool
 
-surrounding :: (Int -> Int -> Bool) -> Int -> Int -> [[Integer]] -> [(Int, Int)]
+surrounding :: (Int -> Int -> Bool) -> Int -> Int -> [[a]] -> [(Int, Int)]
 
-setWith :: (Integer -> Integer -> Integer) -> Integer -> Int -> Int -> [[Integer]] -> [[Integer]]
-set :: Integer -> Int -> Int -> [[Integer]] -> [[Integer]]
+setWith :: (a -> a -> a) -> a -> Int -> Int -> [[a]] -> [[a]]
+set :: a -> Int -> Int -> [[a]] -> [[a]]
 
 showMatrix :: [[Integer]] -> String
 
@@ -37,6 +37,7 @@ setWith fun v x y m = let newLine = swapAt (fun v $ value x y m) x (m !! y)
                            in a ++ (e : tail b)
 
 set = setWith const
+
 
 showMatrix [] = ""
 showMatrix m = foldl (\acc l -> acc ++ showLine l ++ "\n") "" m
