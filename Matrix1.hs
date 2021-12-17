@@ -16,7 +16,7 @@ surrounding :: (Int -> Int -> Bool) -> Int -> Int -> [[a]] -> [(Int, Int)]
 setWith :: (a -> a -> a) -> a -> Int -> Int -> [[a]] -> [[a]]
 set :: a -> Int -> Int -> [[a]] -> [[a]]
 
-showMatrix :: [[Integer]] -> String
+showMatrix :: Show a => [[a]] -> String
 
 readSingleDigitMatrix = (map . map) (\x -> read [x]::Integer)
 
