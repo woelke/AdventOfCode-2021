@@ -16,7 +16,7 @@ unionStats :: [(Char, Integer)] -> [(Char, Integer)] -> [(Char, Integer)]
 
 puzzleResult :: [(Char, Integer)] -> Integer
 
-readInput = foldl (flip parseLine) ("", Map.empty)
+readInput = foldl' (flip parseLine) ("", Map.empty)
   where parseLine l (template, rules)
           | '-' `elem` l = let [k, v] = splitLine (atString " -> ") l
                              in (template, Map.insert k v rules)
@@ -39,7 +39,7 @@ stepX count template rules = last $ take (fromIntegral (count + 1)) $ iterate ca
 stepXBufferdStats count template rules = accumulatedStats `unionStats` [(last template, 1)]
   where acc = ([], Map.empty)
         zipTemplate = zip template (tail template)
-        accumulatedStats = fst $ foldl (\(stats, buffer) (a,b) -> let (newStats, newBuffer) = getStatsForPair a b count rules buffer
+        accumulatedStats = fst $ foldl' (\(stats, buffer) (a,b) -> let (newStats, newBuffer) = getStatsForPair a b count rules buffer
                                                                    in (stats `unionStats` newStats `unionStats` [(b, -1)], newBuffer)) acc zipTemplate
 
 getStatsForPair a b count rules buffer =
@@ -51,15 +51,15 @@ getStatsForPair a b count rules buffer =
 letterStatistics polymer = map (\l -> (l, fromIntegral $ length $ filter (==l) polymer)) letters
   where letters = Set.toList $ Set.fromList polymer
 
-unionStats = foldl (flip addStat)
+unionStats = foldl' (flip addStat)
   where addStat (c,v) stats =
           case lookup c stats of
             Nothing -> (c,v):stats
             Just x -> (c, x + v): delete (c,x) stats
 
 puzzleResult stats = fromIntegral $ maxCount - minCount
-  where maxCount = foldl (\acc (_, count) -> max acc count) 0 stats
-        minCount = foldl (\acc (_, count) -> min acc count) (snd $ head stats) stats
+  where maxCount = foldl' (\acc (_, count) -> max acc count) 0 stats
+        minCount = foldl' (\acc (_, count) -> min acc count) (snd $ head stats) stats
 
 run1 =
   do ls <- readLines "puzzle.txt"
