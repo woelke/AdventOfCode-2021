@@ -26,7 +26,7 @@ checkRequriements [s0, s1, s2, s3, s4, s5, s6, s7, s8, s9] =
      checkSizes
   && check0 && check6 && check9
   && check2 && check3 && check5
-  where isSubOf a b = a`Set.isSubsetOf` b
+  where isSubOf a b = a `Set.isSubsetOf` b
         checkSizes =
           Set.size s0 == 6 &&
           Set.size s1 == 2 &&
@@ -44,7 +44,7 @@ checkRequriements [s0, s1, s2, s3, s4, s5, s6, s7, s8, s9] =
         check9 = (s4 `isSubOf` s9) && (s1 `isSubOf` s9)
 
         check2 = not (s1 `isSubOf` s2) && not (s2 `isSubOf` s9)
-        check3 = (s1 `isSubOf` s3)
+        check3 = s1 `isSubOf` s3
         check5 = not (s1 `isSubOf` s5) && (s5 `isSubOf` s9)
 
 checkRequriements _ = False
@@ -66,6 +66,6 @@ run1 =
 
      -- let refinedSignals = refineSignals $ signals $ head notes
      -- let matchedOutputs = matchOutputs refinedSignals $ outputs $ head notes
-  where getOutputValue note = matchOutputs (refineSignals $ signals $ note) (outputs note)
+  where getOutputValue note = matchOutputs (refineSignals $ signals note) (outputs note)
 
 
