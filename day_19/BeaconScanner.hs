@@ -108,11 +108,12 @@ allOverlappses scanners = foldl' addOverlapsInfo Map.empty scannerIdPairs
 
 mergeOverlappses startId os scanners
   = let overlappsesFromStartId = Map.lookup startId os
+        newOs = Map.delete startId os
      in if isNothing overlappsesFromStartId
            then []
-           else mergeNext (fromJust $ Map.lookup startId scanners) (fromJust $ overlappsesFromStartId)
-    where mergeNext startIdScannerData overlappsesFromStartId
-            = foldl' (\acc (id, oInfo) -> let sumScannerData = mergeOverlappses id os scanners
+           else mergeNext (fromJust $ Map.lookup startId scanners) (fromJust $ overlappsesFromStartId) newOs
+    where mergeNext startIdScannerData overlappsesFromStartId currentOs
+            = foldl' (\acc (id, oInfo) -> let sumScannerData = mergeOverlappses id currentOs scanners
                                            in addScannerData acc sumScannerData oInfo)
                      startIdScannerData overlappsesFromStartId
 
@@ -120,9 +121,12 @@ run1 :: IO ()
 -- test :: IO ()
 
 run1 =
-  do ls <- readLines "test.txt"
+  do ls <- readLines "puzzle.txt"
      let scanners = readScanners ls
-     let world = mergeOverlappses 0 (allOverlappses scanners) scanners
+     let allos = allOverlappses scanners
+     let world = mergeOverlappses 0 allos scanners
+     putStr $ showMyList (Map.toList allos)
+     print "----------------"
      putStr $ showMyList world
      print $ length world
 
